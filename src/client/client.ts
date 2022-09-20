@@ -8,9 +8,14 @@ type ScreenName = {
   abbreviation: string;
 };
 
+type Player = {
+  score: number;
+  screenName: ScreenName;
+};
+
 class Client {
   private socket: SocketIOClient.Socket;
-  private screenName: ScreenName;
+  private player: Player;
 
   constructor() {
     this.socket = io();
@@ -24,9 +29,10 @@ class Client {
       location.reload();
     });
 
-    this.socket.on("screenName", (screenName: ScreenName) => {
-      this.screenName = screenName;
-      $(".screenName").text(this.screenName.name);
+    this.socket.on("playerDetails", (player: Player) => {
+      this.player = player;
+      $(".screenName").text(player.screenName.name);
+      $(".score").text(player.score);
     });
 
     this.socket.on("chatMessage", (chatMessage: ChatMessage) => {
@@ -72,12 +78,12 @@ class Client {
     if (messageText && messageText.toString().length > 0) {
       this.socket.emit("chatMessage", <ChatMessage>{
         message: messageText,
-        from: this.screenName.abbreviation,
+        from: this.player.screenName.abbreviation,
       });
 
       $("#messages").append(
         "<li><span class='float-left'><span class='circle'>" +
-          this.screenName.abbreviation +
+          this.player.screenName.abbreviation +
           "</span></span><div class='myMessage'>" +
           messageText +
           "</div></li>"

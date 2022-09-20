@@ -20,9 +20,10 @@ class Client {
             console.log("Disconnected" + message);
             location.reload();
         });
-        this.socket.on("screenName", (screenName) => {
-            this.screenName = screenName;
-            $(".screenName").text(this.screenName.name);
+        this.socket.on("playerDetails", (player) => {
+            this.player = player;
+            $(".screenName").text(player.screenName.name);
+            $(".score").text(player.score);
         });
         this.socket.on("chatMessage", (chatMessage) => {
             $("#messages").append("<li><span class='float-right'><span class='circle'>" +
@@ -48,10 +49,10 @@ class Client {
         if (messageText && messageText.toString().length > 0) {
             this.socket.emit("chatMessage", {
                 message: messageText,
-                from: this.screenName.abbreviation,
+                from: this.player.screenName.abbreviation,
             });
             $("#messages").append("<li><span class='float-left'><span class='circle'>" +
-                this.screenName.abbreviation +
+                this.player.screenName.abbreviation +
                 "</span></span><div class='myMessage'>" +
                 messageText +
                 "</div></li>");
