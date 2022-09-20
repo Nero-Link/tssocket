@@ -42,10 +42,15 @@ class App {
       socket.on("disconnect", function () {
         console.log("Socket disconnected : " + socket.id);
       });
+
+      socket.on("thanksresponse", function (message: any) {
+        console.log(socket.id + "says: " + message);
+        socket.emit("noproblemresponse", "No Problem");
+      });
     });
     setInterval(() => {
       io.emit("random", Math.floor(Math.random() * 10));
-    }, 1000);
+    }, 10000);
     // setInterval(() => {
     //   let randomNumber: number = Math.floor(Math.random() * 10);
     //   let winners: string[] = this.game.GetWinners(randomNumber);
@@ -55,7 +60,7 @@ class App {
     //     });
     //   }
     //   io.emit("random", randomNumber);
-    // }, 1000);
+    // }, 10000);
   }
 
   public Start() {
