@@ -15,46 +15,18 @@ class App {
         const app = (0, express_1.default)();
         app.use(express_1.default.static(path_1.default.join(__dirname, "../client")));
         this.server = new http_1.default.Server(app);
-        const io = new socket_io_1.default.Server(this.server, { serveClient: true });
+        this.io = new socket_io_1.default.Server(this.server);
         this.game = new luckyNumbersGame_1.default();
-        io.on("connection", function (socket) {
-            console.log("User connected : " + socket.id);
-            // this.game.LuckyNumbers[socket.id] = Math.floor(Math.random() * 10);
-            // socket.emit(
-            //   "message",
-            //   "Hello " +
-            //     socket.id +
-            //     ", your lucky number is " +
-            //     this.game.LuckyNumbers[socket.id]
-            // );
-            socket.emit("message", "Hello " + socket.id);
-            socket.broadcast.emit("message", "Everybody, say hello to " + socket.id);
+        this.io.on("connection", (socket) => {
+            console.log("a user connected : " + socket.id);
             socket.on("disconnect", function () {
-                console.log("Socket disconnected : " + socket.id);
-            });
-            socket.on("thanksresponse", function (message) {
-                console.log(socket.id + "says: " + message);
-                socket.emit("noproblemresponse", "No Problem");
+                console.log("socket disconnected : " + socket.id);
             });
         });
-        setInterval(() => {
-            io.emit("random", Math.floor(Math.random() * 10));
-        }, 10000);
-        // setInterval(() => {
-        //   let randomNumber: number = Math.floor(Math.random() * 10);
-        //   let winners: string[] = this.game.GetWinners(randomNumber);
-        //   if (winners.length) {
-        //     winners.forEach((w) => {
-        //       io.to(w).emit("message", "*** You are the winner ***");
-        //     });
-        //   }
-        //   io.emit("random", randomNumber);
-        // }, 10000);
     }
     Start() {
-        this.server.listen(this.port, () => {
-            console.log(`Server listening on Port ${this.port}.`);
-        });
+        this.server.listen(this.port);
+        console.log(`Server listening on port ${this.port}.`);
     }
 }
 new App(port).Start();
