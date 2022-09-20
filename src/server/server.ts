@@ -2,12 +2,15 @@ import express from "express";
 import path from "path";
 import http from "http";
 import socketIO from "socket.io";
+import LuckyNumbersGame from "./luckyNumbersGame";
 
 const port: number = 3000;
 
 class App {
   private server: http.Server;
   private port: number;
+
+  private game: LuckyNumbersGame;
 
   constructor(port: number) {
     this.port = port;
@@ -17,8 +20,20 @@ class App {
     this.server = new http.Server(app);
     const io = new socketIO.Server(this.server, { serveClient: true });
 
+    this.game = new LuckyNumbersGame();
+
     io.on("connection", function (socket: socketIO.Socket) {
       console.log("User connected : " + socket.id);
+
+      // this.game.LuckyNumbers[socket.id] = Math.floor(Math.random() * 10);
+
+      // socket.emit(
+      //   "message",
+      //   "Hello " +
+      //     socket.id +
+      //     ", your lucky number is " +
+      //     this.game.LuckyNumbers[socket.id]
+      // );
 
       socket.emit("message", "Hello " + socket.id);
 
@@ -30,7 +45,17 @@ class App {
     });
     setInterval(() => {
       io.emit("random", Math.floor(Math.random() * 10));
-    }, 10000);
+    }, 1000);
+    // setInterval(() => {
+    //   let randomNumber: number = Math.floor(Math.random() * 10);
+    //   let winners: string[] = this.game.GetWinners(randomNumber);
+    //   if (winners.length) {
+    //     winners.forEach((w) => {
+    //       io.to(w).emit("message", "*** You are the winner ***");
+    //     });
+    //   }
+    //   io.emit("random", randomNumber);
+    // }, 1000);
   }
 
   public Start() {
