@@ -1,4 +1,2 @@
 node_modules
-/foo.html
-/foo.ts
-/foo.js
+foo

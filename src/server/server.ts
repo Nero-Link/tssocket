@@ -71,7 +71,7 @@ class App {
     this.randomScreenNameGenerator = new RandomScreenNameGenerator();
 
     this.io.on("connection", (socket: socketIO.Socket) => {
-      console.log("a user connected : " + socket.id);
+      console.log("User Connected : " + socket.id);
 
       let screenName: ScreenName =
         this.randomScreenNameGenerator.generateRandomScreenName();
@@ -81,7 +81,7 @@ class App {
       socket.emit("playerDetails", this.players[socket.id].player);
 
       socket.on("disconnect", function () {
-        console.log("socket disconnected : " + socket.id);
+        console.log("User Disconnected : " + socket.id);
         if (this.players && this.players[socket.id]) {
           delete this.players[socket.id];
         }

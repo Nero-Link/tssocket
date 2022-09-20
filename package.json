@@ -4,7 +4,8 @@
   "description": "Socket.IO w TS",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently -k \"tsc -p ./src/server -w\" \"tsc -p ./src/client -w\" \"nodemon ./dist/server/server.js\""
+    "dev": "concurrently -k \"tsc -p ./src/server -w\" \"tsc -p ./src/client -w\" \"nodemon ./dist/server/server.js\"",
+    "start": "node ./dist/server/server.js"
   },
   "author": "Brad Inch",
   "license": "ISC",

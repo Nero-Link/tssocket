@@ -36,11 +36,11 @@ class Client {
     this.socket = io();
 
     this.socket.on("connect", function () {
-      console.log("connect");
+      console.log("Connected");
     });
 
     this.socket.on("disconnect", function (message: any) {
-      console.log("disconnect " + message);
+      console.log("Disconnected" + message);
       location.reload();
     });
 
