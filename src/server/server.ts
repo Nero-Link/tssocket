@@ -13,7 +13,7 @@ class App {
   private port: number;
 
   private io: socketIO.Server;
-  private game: LuckyNumbersGame;
+  private games: { [id: number]: LuckyNumbersGame } = {};
   private randomScreenNameGenerator: RandomScreenNameGenerator;
   private players: { [id: string]: Player } = {};
 
@@ -32,16 +32,48 @@ class App {
     );
 
     this.server = new http.Server(app);
-
     this.io = new socketIO.Server(this.server);
 
-    this.game = new LuckyNumbersGame();
+    this.games[0] = new LuckyNumbersGame(
+      0,
+      "Bronze Game",
+      "🥉",
+      10,
+      1,
+      10,
+      this.players,
+      this.updateChat,
+      this.sendPlayerDetails
+    );
+    this.games[1] = new LuckyNumbersGame(
+      1,
+      "Silver Game",
+      "🥈",
+      16,
+      2,
+      20,
+      this.players,
+      this.updateChat,
+      this.sendPlayerDetails
+    );
+    this.games[2] = new LuckyNumbersGame(
+      2,
+      "Gold Game",
+      "🥇",
+      35,
+      10,
+      100,
+      this.players,
+      this.updateChat,
+      this.sendPlayerDetails
+    );
+
     this.randomScreenNameGenerator = new RandomScreenNameGenerator();
 
     this.io.on("connection", (socket: socketIO.Socket) => {
-      console.log("User Connected : " + socket.id);
+      console.log("a user connected : " + socket.id);
 
-      let screenName =
+      let screenName: ScreenName =
         this.randomScreenNameGenerator.generateRandomScreenName();
 
       this.players[socket.id] = new Player(screenName);
@@ -49,7 +81,7 @@ class App {
       socket.emit("playerDetails", this.players[socket.id].player);
 
       socket.on("disconnect", function () {
-        console.log("User Disconnected : " + socket.id);
+        console.log("socket disconnected : " + socket.id);
         if (this.players && this.players[socket.id]) {
           delete this.players[socket.id];
         }
@@ -58,8 +90,39 @@ class App {
       socket.on("chatMessage", function (chatMessage: ChatMessage) {
         socket.broadcast.emit("chatMessage", chatMessage);
       });
+
+      socket.on("submitGuess", (gameId: number, guess: number) => {
+        if (guess >= 0 && guess <= 10) {
+          if (this.games[gameId].submitGuess(socket.id, guess)) {
+            socket.emit(
+              "confirmGuess",
+              gameId,
+              guess,
+              this.players[socket.id].player.score
+            );
+          }
+        }
+      });
     });
+
+    setInterval(() => {
+      this.io.emit("GameStates", [
+        this.games[0].gameState,
+        this.games[1].gameState,
+        this.games[2].gameState,
+      ]);
+    }, 1000);
   }
+
+  public updateChat = (chatMessage: ChatMessage) => {
+    this.io.emit("chatMessage", chatMessage);
+  };
+
+  public sendPlayerDetails = (playerSocketId: string) => {
+    this.io
+      .to(playerSocketId)
+      .emit("playerDetails", this.players[playerSocketId].player);
+  };
 
   public Start() {
     this.server.listen(this.port);
