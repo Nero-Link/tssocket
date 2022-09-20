@@ -15,7 +15,11 @@ class App {
     app.use(express.static(path.join(__dirname, "../client")));
 
     this.server = new http.Server(app);
-    const io = new socketIO.Server(this.server);
+    const io = new socketIO.Server(this.server, { serveClient: true });
+
+    io.on("connection", function (socket: socketIO.Socket) {
+      console.log("User connected : " + socket.id);
+    });
   }
 
   public Start() {

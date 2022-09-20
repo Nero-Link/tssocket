@@ -14,7 +14,10 @@ class App {
         const app = (0, express_1.default)();
         app.use(express_1.default.static(path_1.default.join(__dirname, "../client")));
         this.server = new http_1.default.Server(app);
-        const io = new socket_io_1.default.Server(this.server);
+        const io = new socket_io_1.default.Server(this.server, { serveClient: true });
+        io.on("connection", function (socket) {
+            console.log("User connected : " + socket.id);
+        });
     }
     Start() {
         this.server.listen(this.port, () => {
