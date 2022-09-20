@@ -2,6 +2,7 @@
   "name": "tssocket",
   "version": "1.0.0",
   "description": "Socket.IO w TS",
+  "main": "dist/client/index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently -k \"tsc -p ./src/server -w\" \"tsc -p ./src/client -w\" \"nodemon ./dist/server/server.js\"",
