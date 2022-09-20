@@ -19,7 +19,18 @@ class App {
 
     io.on("connection", function (socket: socketIO.Socket) {
       console.log("User connected : " + socket.id);
+
+      socket.emit("message", "Hello " + socket.id);
+
+      socket.broadcast.emit("message", "Everybody, say hello to " + socket.id);
+
+      socket.on("disconnect", function () {
+        console.log("Socket disconnected : " + socket.id);
+      });
     });
+    setInterval(() => {
+      io.emit("random", Math.floor(Math.random() * 10));
+    }, 10000);
   }
 
   public Start() {

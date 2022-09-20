@@ -17,7 +17,15 @@ class App {
         const io = new socket_io_1.default.Server(this.server, { serveClient: true });
         io.on("connection", function (socket) {
             console.log("User connected : " + socket.id);
+            socket.emit("message", "Hello " + socket.id);
+            socket.broadcast.emit("message", "Everybody, say hello to " + socket.id);
+            socket.on("disconnect", function () {
+                console.log("Socket disconnected : " + socket.id);
+            });
         });
+        setInterval(() => {
+            io.emit("random", Math.floor(Math.random() * 10));
+        }, 10000);
     }
     Start() {
         this.server.listen(this.port, () => {
