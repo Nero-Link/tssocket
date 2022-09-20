@@ -20,9 +20,12 @@ class App {
         this.io = new socket_io_1.default.Server(this.server);
         this.game = new luckyNumbersGame_1.default();
         this.io.on("connection", (socket) => {
-            console.log("a user connected : " + socket.id);
+            console.log("User Connected : " + socket.id);
             socket.on("disconnect", function () {
-                console.log("socket disconnected : " + socket.id);
+                console.log("User Disconnected : " + socket.id);
+            });
+            socket.on("chatMessage", function (chatMessage) {
+                socket.broadcast.emit("chatMessage", chatMessage);
             });
         });
     }

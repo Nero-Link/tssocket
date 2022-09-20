@@ -33,10 +33,14 @@ class App {
     this.game = new LuckyNumbersGame();
 
     this.io.on("connection", (socket: socketIO.Socket) => {
-      console.log("a user connected : " + socket.id);
+      console.log("User Connected : " + socket.id);
 
       socket.on("disconnect", function () {
-        console.log("socket disconnected : " + socket.id);
+        console.log("User Disconnected : " + socket.id);
+      });
+
+      socket.on("chatMessage", function (chatMessage: ChatMessage) {
+        socket.broadcast.emit("chatMessage", chatMessage);
       });
     });
   }

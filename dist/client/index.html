@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>TypeScript Socket.IO Course</title>
+    <title>Socket.IO Numbers Mini-Games</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" />
     <style>
@@ -67,6 +67,38 @@
         margin-bottom: 40px;
       }
 
+      .messages {
+        padding-left: 0;
+        overflow: hidden;
+        height: 340px;
+        margin-bottom: 40px;
+      }
+
+      .messages li {
+        list-style-type: none;
+        margin-bottom: 30px;
+        padding: 6px 6px 6px 6px;
+        display: block;
+      }
+
+      .otherMessage {
+        background: #ffcda3;
+        border: solid 1px gray;
+        margin: 0px 5px 5px 0px;
+        float: right;
+        padding: 0px 6px 0px 6px;
+        border-radius: 10px 10px 0 10px;
+      }
+
+      .myMessage {
+        background: #1bffbb;
+        border: solid 1px gray;
+        margin: 0px 5px 5px 5px;
+        float: left;
+        padding: 0px 6px 0px 6px;
+        border-radius: 10px 10px 10px 0;
+      }
+
       .jumbotron {
         margin-top: -40px;
         height: 180px;
@@ -81,11 +113,6 @@
   <body>
     <div class="jumbotron text-center" style="margin-bottom: 0">
       <h1>Lucky Numbers Mini-Games</h1>
-      <p>
-        <a href="https://sbcode.net/tssock" target="_blank">
-          https://sbcode.net/tssock
-        </a>
-      </p>
     </div>
 
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -144,20 +171,15 @@
                   onkeyup=""
                 />
                 <span class="input-group-btn">
-                  <button class="btn btn-info">Send</button>
+                  <button class="btn btn-info" onclick="client.sendMessage()">
+                    Send
+                  </button>
                 </span>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="footer text-center" style="margin-bottom: 0">
-      This is an example game from the TypeScript SocketIO course at
-      <a href="https://sbcode.net/tssock" target="_blank">
-        https://sbcode.net/tssock
-      </a>
     </div>
 
     <script src="jquery/jquery.min.js"></script>
