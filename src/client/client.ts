@@ -3,8 +3,14 @@ type ChatMessage = {
   from: string;
 };
 
+type ScreenName = {
+  name: string;
+  abbreviation: string;
+};
+
 class Client {
   private socket: SocketIOClient.Socket;
+  private screenName: ScreenName;
 
   constructor() {
     this.socket = io();
@@ -16,6 +22,11 @@ class Client {
     this.socket.on("disconnect", function (message: any) {
       console.log("Disconnected" + message);
       location.reload();
+    });
+
+    this.socket.on("screenName", (screenName: ScreenName) => {
+      this.screenName = screenName;
+      $(".screenName").text(this.screenName.name);
     });
 
     this.socket.on("chatMessage", (chatMessage: ChatMessage) => {
@@ -61,11 +72,13 @@ class Client {
     if (messageText && messageText.toString().length > 0) {
       this.socket.emit("chatMessage", <ChatMessage>{
         message: messageText,
-        from: "AB",
+        from: this.screenName.abbreviation,
       });
 
       $("#messages").append(
-        "<li><span class='float-left'><span class='circle'>AB</span></span><div class='myMessage'>" +
+        "<li><span class='float-left'><span class='circle'>" +
+          this.screenName.abbreviation +
+          "</span></span><div class='myMessage'>" +
           messageText +
           "</div></li>"
       );
